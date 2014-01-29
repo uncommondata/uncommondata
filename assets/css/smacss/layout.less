@@ -1,0 +1,37 @@
+.ui {
+  &.grid {
+    max-width: 100% !important;
+    overflow: none;
+    .ui.column { margin-top: 0 !important; }
+
+    &.page {
+      padding-left: 5%;
+      padding-right: 5%;
+    }
+
+    &.full.width {
+      width: 100%;
+      padding: 0;
+      margin: 0;
+    }
+  }
+
+  &.column.left.details {
+    .inner-shadow(0,2px);
+    background-color: #dadada;
+    background-image: url("/images/backgrounds/diagonal_stripe.png");  
+    min-height: 100%;
+    margin-bottom: 0;
+    padding: 0 !important;
+  }
+}
+
+.stuck {
+  position: fixed;
+  top: 0px;
+}
+
+.stripe {
+  height: 3px;
+  background-color: #93e3ff;
+}

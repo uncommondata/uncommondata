@@ -1,0 +1,40 @@
+{
+  "name": "uncommondata",
+  "description": "uncommondata user activity monitoring",
+  "version": "0.0.1-68",
+  "private": true,
+  "dependencies": {
+    "express": "3.x",
+    "connect-assets": "latest",
+    "connect-flash": "latest",
+    "connect-redis": "latest",
+    "coffee-script": "latest",
+    "less": "1.5",
+    "jade": "0.x",
+    "uglify-js": "latest",
+    "mongoose": "3.x",
+    "mongoose-unique-validator": "latest",
+    "socket.io": "0.9.x",
+    "pusher": "latest",
+    "passport": "0.1.x",
+    "passport-local": "0.1.x",
+    "passport-localapikey": "latest",
+    "redis": "latest",
+    "hiredis": "latest",
+    "crypto": "latest",
+    "request": "~2.30.0",
+    "moment": "latest",
+    "ws": "~0.4.31",
+    "socket.io-client": "~0.9.16",
+    "underscore": "latest",
+    "geoip-lite": "latest",
+    "when": "~2.7.1"
+  },
+  "subdomain": "uncommondata",
+  "scripts": {
+    "start": "coffee server.coffee"
+  },
+  "engines": {
+    "node": "0.10.x"
+  }
+}

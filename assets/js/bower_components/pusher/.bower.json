@@ -1,0 +1,30 @@
+{
+  "name": "pusher",
+  "location": "git://github.com/pusher/pusher-js.git",
+  "description": "Pusher JavaScript library",
+  "keywords": [
+    "pusher",
+    "client",
+    "publish",
+    "subscribe",
+    "realtime",
+    "websocket"
+  ],
+  "licence": "MIT",
+  "authors": [
+    "Pusher <support@pusher.com>"
+  ],
+  "main": "./dist/pusher.js",
+  "homepage": "https://github.com/pusher/pusher-js",
+  "version": "2.1.6",
+  "_release": "2.1.6",
+  "_resolution": {
+    "type": "version",
+    "tag": "v2.1.6",
+    "commit": "a2e29a29a0a892f50a89573c7091e32218d5154e"
+  },
+  "_source": "git://github.com/pusher/pusher-js.git",
+  "_target": "~2.1.6",
+  "_originalSource": "pusher",
+  "_direct": true
+}

@@ -1,0 +1,101 @@
+require-authenticated
+
+div.ui.dimmer.inverted(ng-class="{active: loading}")
+  div.ui.text.loader loading
+
+div.ui.grid.full.width
+  div.ui.ten.wide.column.left.details
+    #infographic
+      //- section#live
+      //-   div.ui.list
+      //-     div.item(ng-repeat="event in stream")
+      //-       {{event}}
+
+      section#overview
+        .ui.segment
+          span.ui.black.ribbon.label
+            | overview
+
+
+      section#users
+        .ui.segment
+          span.ui.black.ribbon.label
+            | {{dashboard.events.user.size() | number}} users detected
+
+          div.ui.list
+            div.item
+              i.icon.icon-person(
+                  ng-repeat="userCount in dashboard.events.user.all()"
+                  ng-class="{hidden: userCount.value==0 || (dashboard.state.user && dashboard.state.user != userCount.key), {{dashboard.user(userCount.key) && dashboard.user(userCount.key).severityGroup() || 'low'}}: true}"
+                  ng-click="toggleUser(userCount.key)"
+                  title="{{dashboard.user(userCount.key).name()}} - {{userCount.value}}" 
+                  data-variation="inverted"
+                  popup)
+
+      section#locations.map
+        .ui.segment
+          span.ui.black.ribbon.label
+            | {{dashboard.events.country.size() | number}} regions discovered
+          map(count="{{dashboard.events.all.size()}}")
+
+  div#event-list.ui.six.wide.column.right(sticky)
+    section#events
+      h4.ui.header
+        i.bell.icon.large
+        div.content
+          | {{dashboard.events.all.size() | number}} Events
+          div.sub.header filter events using the infographic on the left
+
+      div.filters
+        span.filter.ui.inverted.black.label(ng-repeat="filter in dashboard.filters")
+          span.value {{filter.label}}
+          i.delete.icon(ng-click="toggleFilter(filter.dimension, filter.value)")
+
+      ul.rules(ng-controller="DashboardEventsCtrl")
+        li(ng-repeat="group in dashboard.events.rule.all()" ng-show="group.value > 0")
+          .rule(ng-class="{active: dashboard.state.rule == group.key}" ng-click="toggleRule(group.key)")
+            span.openclose
+              i.icon.triangle.right
+            span.count 
+              {{group.value | number}}
+            span.name {{group.key}}
+            span.timestamp.right
+              | 5 min
+
+          .events.ui.list(ng-show="dashboard.state.rule == group.key")
+            .event.item(ng-repeat="event in dashboard.state.events(group.key)")
+              i.action.icon.checkmark(ng-click="event.resolved=!event.resolved" ng-class="{active: event.resolved}")
+              i.action.icon.star(ng-click="event.flagged = !event.flagged" ng-class="{'active': event.flagged}")
+              .content
+                span.timestamp
+                  | {{event.moment.fromNow()}}
+                p.body
+                  {{event.name}}
+                  {{event.flagged}}
+
+                ul.attributes
+                  li.attribute
+                    span.name user:
+                    span.value(ng-repeat="user in event._users") {{dashboard.user(user).name()}}
+                  li.attribute
+                    span.name device:
+                    span.value {{dashboard.device(event._dev).name()}}
+                  li.attribute(ng-repeat="(name,value) in displayAttributes(event)")
+                    span.name {{name}}:
+                    span.value {{value}}
+
+
+        //- li.event(ng-repeat="event in dashboard.events.all.top(50) | limitTo:50" ng-class="{resolved: event.resolved}")
+        //-   span.space &nbsp;
+        //-   span.name {{event.name}}
+        //-   span.action.ignore.right
+        //-     i.icon.checkmark(ng-click="event.resolved=!event.resolved" ng-class="{checked: event.resolved}")
+        //-   span.action.flag.right(ng-class="{flagged: event.flagged}")
+        //-     i.icon.star(ng-click="event.flagged = !event.flagged")
+        //-   span.timestamp.right
+        //-     | {{event.timeAgo()}}
+
+
+
+
+

@@ -1,0 +1,47 @@
+require-anonymous
+
+div.ui.grid.authentication.join
+  div.five.wide.column
+  div.six.wide.column
+    form(ng-submit="save()")
+      div.ui.form.segment
+        h2.ui.header
+          | Sign up
+          div.sub.header free trial, no credit card required
+
+        div.field(ng-class="{error: user.errors.name}")
+          label Name
+          div.ui.left.labeled.input
+            input(ng-model="user.name", type="text" placeholder="First Last")
+            div.ui.corner.label
+              i.icon.asterisk
+
+        div.field(ng-class="{error: user.errors.email}")
+          label Email 
+          div.ui.left.labeled.input
+            input(ng-model="user.email" type="email" placeholder="you@yourcompany.com")
+            div.ui.corner.label
+              i.icon.asterisk
+
+        div.field(ng-class="{error: user.errors._company}")
+          label Company
+          div.ui.left.labeled.input
+            input(ng-model="user.company_name", type="text" placeholder="Acme, Inc.")
+            div.ui.corner.label
+              i.icon.asterisk
+
+        div.field(ng-class="{error: user.errors.hashed_password}")
+          label Password
+          div.ui.left.labeled.icon.input
+            input.password(ng-model="user.password" type="password", placeholder="password")
+            i.lock.icon
+            div.ui.corner.label
+              i.icon.asterisk
+
+        div.inline.field(ng-class="{error: user.errors.terms}" ng-click="user.terms=!user.terms")
+          div.ui.checkbox
+            input(type="checkbox" ng-model="user.terms")
+            label I agree to the Terms and Conditions
+
+        input.ui.blue.submit.button(type="submit" value="Get Started")
+  div.five.wide.column

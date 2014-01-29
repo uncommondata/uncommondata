@@ -1,0 +1,17 @@
+:development:
+  :js:
+    :host: foo
+    :cdn: 
+      :http: http://localhost:5555/
+      :https: http://localhost:5555/
+
+:production:
+  :js:
+    :cdn:
+      :http: http://js.pusher.com/
+      :https: https://d3dy5gmtp8yhk7.cloudfront.net/
+  :s3:
+    :cf_distribution_id: <YOUR AWS CLOUD FRONT DISTRIBUTION ID>
+    :bucket: com.pusher.js
+    :access_key_id:
+    :secret_access_key:

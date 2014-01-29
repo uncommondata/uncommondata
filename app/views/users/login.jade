@@ -1,0 +1,27 @@
+require-anonymous
+
+div.ui.grid.authentication.login
+  div.five.wide.column
+  div.six.wide.column
+    div.form.ui.segment(ng-class="{error: session.errors}")
+      h2.ui.header
+        | Welcome Back
+
+      form(ng-submit="save()")
+        div.ui.error.message
+          span invalid email address or password
+
+        div.field
+          label Email 
+          div.ui.labeled.input
+            input(ng-model="session.email" type="email" placeholder="you@yourcompany.com")
+
+        div.field
+          label Password
+          div.ui.left.labeled.icon.input
+            input.password(ng-model="session.password" type="password", placeholder="password")
+            i.lock.icon
+
+
+        input.ui.blue.submit.button(type="submit" value="Login")
+  div.five.wide.column

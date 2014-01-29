@@ -1,0 +1,95 @@
+
+html(ng-app="app")
+  head
+    script(src="//js.pusher.com/2.1/pusher.min.js" type="text/javascript")
+
+    != css('/css/main')
+    != js('/js/main')
+
+    link(href='http://fonts.googleapis.com/css?family=Lobster|Roboto:400,700|Open+Sans:400italic,400' rel='stylesheet' type='text/css')
+    link(href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.10.0/css/semantic.min.css" media="all" rel="stylesheet" type="text/css")
+
+  body(ng-controller="RootCtrl", ng-class="{authenticated: appUser.id, authentication: page.join || page.login}")
+    if user
+      user(name=user.name id=user.id apikey=user._company.apikey)
+    else
+      user
+
+    div.white.stripe
+
+    div.global.navigation.inverted
+      div.ui.column
+        div.ui.main.inverted.menu.ng-cloak
+          a.item.application.logo
+            img(src="/images/logo_micro.png")
+          div.item.ui.dropdown(dropdown ng-show="appUser")
+            div.text today
+            i.dropdown.icon
+            div.menu
+              div.item today
+              div.item yesterday
+              div.item ..
+              div.item calendar here
+
+          a.item(ng-class="{selected: tab == 'dashboard'}" href="/dashboard" ng-show="appUser")
+            | overview
+          a.item(ng-class="{selected: tab == 'reports'}" href="/dashboard/reports" ng-show="appUser")
+            | realtime
+          a.item.right.logout(href="/logout" data-content="logout" ng-show="appUser" popup) 
+            i.icon.sign.out.large
+          span.item.name.right(ng-show="appUser") {{appUser.name}}
+          .item.right.join(ng-show="page.login")
+            | Don't have an account?
+            | 
+            a(href="/join") Sign up.
+          .item.right.join(ng-show="page.join")
+            | Already have an account? 
+            | 
+            a(href="/login") Login.
+    ng-view
+
+
+    script.
+      // Include the UserVoice JavaScript SDK (only needed once on a page)
+      UserVoice=window.UserVoice||[];(function(){var uv=document.createElement('script');uv.type='text/javascript';uv.async=true;uv.src='//widget.uservoice.com/N8PUUOd8Ex6pw4f5t7fw.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv,s)})();
+
+      //
+      // UserVoice Javascript SDK developer documentation:
+      // https://www.uservoice.com/o/javascript-sdk
+      //
+
+      // Set colors
+      UserVoice.push(['set', {
+        accent_color: '#e2753a',
+        trigger_color: 'white',
+        trigger_background_color: '#e2753a'
+      }]);
+
+      // Identify the user and pass traits
+      // To enable, replace sample data with actual user traits and uncomment the line
+      UserVoice.push(['identify', {
+        //email:      'john.doe@example.com', // User’s email address
+        //name:       'John Doe', // User’s real name
+        //created_at: 1364406966, // Unix timestamp for the date the user signed up
+        //id:         123, // Optional: Unique id of the user (if set, this should not change)
+        //type:       'Owner', // Optional: segment your users by type
+        //account: {
+        //  id:           123, // Optional: associate multiple users with a single account
+        //  name:         'Acme, Co.', // Account name
+        //  created_at:   1364406966, // Unix timestamp for the date the account was created
+        //  monthly_rate: 9.99, // Decimal; monthly rate of the account
+        //  ltv:          1495.00, // Decimal; lifetime value of the account
+        //  plan:         'Enhanced' // Plan name for the account
+        //}
+      }]);
+
+      // Add default trigger to the bottom-right corner of the window:
+      UserVoice.push(['addTrigger', { mode: 'contact', trigger_position: 'bottom-left' }]);
+
+      // Or, use your own custom trigger:
+      //UserVoice.push(['addTrigger', '#id', { mode: 'contact' }]);
+
+      // Autoprompt for Satisfaction and SmartVote (only displayed under certain conditions)
+      UserVoice.push(['autoprompt', {}]);
+
+
