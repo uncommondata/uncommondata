@@ -27,7 +27,6 @@ require('./config/routes')(app, redis)
 # EXPRESS HTTP + SOCKET.IO
 
 server = http.createServer(app)
-server.listen(process.env.PORT or 5000)
 
 # SOCKET.IO INBOUND
 
@@ -35,19 +34,19 @@ EventProcessor = require('./app/processors/event_processor')
 eventProcessor = new EventProcessor(redis)
 
 count = 0
-WebSocketServer = require('ws').Server
-wss = new WebSocketServer(server: server)
-wss.on 'connection', (ws) ->
-  console.log "connect"
-  console.log this.clients.length
-  ws.on 'message', (message) ->
-    data = JSON.parse(message)
-    count += data.length
-    console.log "websocket received #{count} events"
-    for event in data
-      eventProcessor.enqueue(event) 
+io = require('socket.io').listen(server)
+io.sockets.on 'connection', (socket) ->
+  socket.on 'message', (message) ->
+    if message
+      count += message.length
+      console.log "websocket received #{message.length} events, #{count} total"
+      for event in message
+        eventProcessor.enqueue(event) 
 
-console.log "websocket server created"
-console.log("Listening for connections");
+  socket.on 'disconnect', -> #
+
+port = process.env.PORT or 5000
+server.listen(port)
+console.log("Listening for connections on #{port}");
 
 exports = module.exports = app
