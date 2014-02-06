@@ -9,9 +9,7 @@ login = (req, res) ->
 
 exports.authCallback = login
 exports.session = login
-
-exports.login = (req, res) -> 
-  login(req, res)
+exports.login = login
 
 exports.logout = (req, res) ->
   req.logout()

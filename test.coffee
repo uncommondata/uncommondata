@@ -5,10 +5,11 @@ Rand = require('./lib/rand')
 rand = new Rand()
 
 # config = { key: "0d496a4459f89d313c4e85f42ebffbb4", host: "uncommondata.herokuapp.com", port: 80 }
-config = { key: "fbb467e62526a929cef5c9e488d93f23", host: "localhost", port: 5000 }
+config = { key: "e272201a0baf0596848291341bb761b7", host: "localhost", port: 5000 }
 
-WebSocket = require('ws');
-ws = new WebSocket("ws://#{config.host}:#{config.port}");
+io = require('socket.io-client')
+url = "http://#{config.host}:#{config.port}"
+socket = io.connect(url)
 
 rules = [
   "Grouping of ossec rules.",
@@ -2381,8 +2382,7 @@ buildEvents = (cnt) ->
         events.push(event)
         if events.length == cnt
           console.log "sending #{events.length} events"
-          ws.send(JSON.stringify(events))
+          socket.emit('message', events)
           buildEvents(cnt)
 
-ws.on 'open', ->
-  buildEvents 10
+buildEvents 10

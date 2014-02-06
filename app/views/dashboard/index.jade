@@ -6,10 +6,15 @@ div.ui.dimmer.inverted(ng-class="{active: loading}")
 div.ui.grid.full.width
   div.ui.ten.wide.column.left.details
     #infographic
-      //- section#live
-      //-   div.ui.list
-      //-     div.item(ng-repeat="event in stream")
-      //-       {{event}}
+      section#getting-started.ng-cloak(ng-show="dashboard.events.all.size() == 0") 
+        //- todo - visibility should be based on an account flag, not event count
+        //- added as temporary scaffolding for communication
+        .ui.segment
+          span.ui.black.ribbon.label
+            | getting started
+
+          h4.ui.header.small
+            | your api key: {{ appUser.apikey }}
 
       section#overview
         .ui.segment

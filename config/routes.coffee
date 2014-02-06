@@ -1,22 +1,19 @@
 controllers = "../app/controllers"
-require("#{controllers}/api/v1/dashboard/events")
-require("#{controllers}/api/v1/dashboard/users")
-require("#{controllers}/api/v1/dashboard/devices")
+
+users       = require("#{controllers}/users")
+apiEvents   = require("#{controllers}/api/v1/dashboard/events")
+apiUsers    = require("#{controllers}/api/v1/dashboard/users")
+apiDevices  = require("#{controllers}/api/v1/dashboard/devices")
 
 module.exports = (app, redis) ->
-  # require controllers
-  app_users  = require "#{controllers}/app_users"
-  events = require("#{controllers}/api/v1/events")(redis)
-
   # routes
-  app.get  "/api/v1/dashboard/events",       DashboardEventsController.index
-  app.get  "/api/v1/dashboard/devices",      DashboardDevicesController.index
-  app.get  "/api/v1/dashboard/users",        DashboardUsersController.index
-  app.post "/api/v1/events",                 events.create
-  app.post "/users",                         app_users.create
-  
-  app.get('/logout', app_users.logout)
-  app.post '/sessions', passport.authenticate('local'), (req, res) -> 
+  app.get  "/api/v1/dashboard/events",       apiEvents.index
+  app.get  "/api/v1/dashboard/devices",      apiDevices.index
+  app.get  "/api/v1/dashboard/users",        apiUsers.index
+
+  app.post "/users",                         users.create
+  app.get  "/logout", users.logout
+  app.post "/sessions", passport.authenticate('local'), (req, res) -> 
     user = req.user
     json = {id: user.id, apikey: user._company.apikey, name: user.name}
     res.json(json)
