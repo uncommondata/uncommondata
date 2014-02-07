@@ -49,34 +49,49 @@ class EventProcessor
     console.log "processing #{events.length} events"
 
     for json in events
-      do (json) =>
-        @loadCompany json, (company) =>
-          schema = company.object.schemas()
-          users = []
-          promises = _.map json.event.users, (user) => @ensureUser(schema, company, user).then (user) -> users.push(user)
-          usersLoaded = () =>
-            @ensureDevice(schema, company, json.event.device).then (device) =>
-              e = new schema.Event({
-                _users: _.map users, (user) -> user.id
-                _device: device.id
-                timestamp: json.event.timestamp
-                name: json.event.name
-                payload: json.event.payload
-                ips: @geocode(json.event.payload.ip_addresses)
-              })
-              e.save (err) =>
-                if err
-                  console.log "error: #{err}"
-                else
-                  browserNotifier.enqueue(company.apikey, e)
-          _when.all(promises).then(usersLoaded)
+      if json
+        do (json) =>
+          @loadCompany json, (company) =>
+            
+            schema = company.object.schemas()
+            users = []
+            device = null
+
+            promises = _.map json.event.users, (user) => @ensureUser(schema, company, user).then (user) -> users.push(user)
+            promises.push @ensureDevice(schema, company, json.event.device).then (result) -> device = result
+            _when.all(promises).then =>
+              try
+                console.log "promises fulfilled"
+                e = new schema.Event({
+                  timestamp: json.event.timestamp
+                  name: json.event.name
+                  payload: json.event.payload
+                })
+                e._users  = _.map users, (user) -> user.id
+                e._device = device.id if device
+                e.ips = @geocode(json.event.payload.ip_addresses) if json.event.payload 
+
+                console.log e
+                e.save (err) =>
+                  console.log e
+                  if err
+                    console.log "error: #{err}"
+                  else
+                    browserNotifier.enqueue(company.apikey, e)
+              catch error
+                console.log error
+
+      else
+        console.log "json was empty.."
+
 
   geocode: (ip_addresses) =>
     locations = []
-    for ip in ip_addresses
-      details = geoip.lookup(ip)
-      if details
-        locations.push {ip: ip, ll: details.ll, city: details.city, region: details.region, country: details.country}
+    if ip_addresses
+      for ip in ip_addresses
+        details = geoip.lookup(ip)
+        if details
+          locations.push {ip: ip, ll: details.ll, city: details.city, region: details.region, country: details.country}
     locations
 
   loadCompany: (e, callback, retries=0) =>
@@ -102,13 +117,17 @@ class EventProcessor
 
   ensureUser: (schema, company, json) =>
     deferred = _when.defer()
-    user = @companies[company.apikey].users[json.identifier] if @companies[company.apikey]
-    if user
-      deferred.resolve(user)
+    if json && json.identifier
+      user = @companies[company.apikey].users[json.identifier] if @companies[company.apikey]
+      if user
+        deferred.resolve(user)
+      else
+        success = (user) -> deferred.resolve(user)
+        error = (err) -> deferred.reject(err)
+        @findOrCreateUser(schema, company, json).then(success, error)
     else
-      success = (user) -> deferred.resolve(user)
-      error = (err) -> deferred.reject(err)
-      @findOrCreateUser(schema, company, json).then(success, error)
+      deferred.resolve(null)
+
     deferred.promise
 
   findOrCreateUser: (schema, company, json) ->
@@ -141,14 +160,16 @@ class EventProcessor
 
   ensureDevice: (schema, company, json) =>
     deferred = _when.defer()
-    deferred.resolve(null) unless json
-    device = @companies[company.apikey].devices[json.identifier] if @companies[company.apikey]
-    if (device)
-      deferred.resolve(device)
+    if json && json.identifier
+      device = @companies[company.apikey].devices[json.identifier] if @companies[company.apikey]
+      if (device)
+        deferred.resolve(device)
+      else
+        success = (device) -> deferred.resolve(device)
+        error = (err) -> deferred.reject(err)
+        @findOrCreateDevice(schema, company, json).then(success, error)
     else
-      success = (device) -> deferred.resolve(device)
-      error = (err) -> deferred.reject(err)
-      @findOrCreateDevice(schema, company, json).then(success, error)
+      deferred.resolve(null)
     deferred.promise
 
   findOrCreateDevice: (schema, company, json) =>

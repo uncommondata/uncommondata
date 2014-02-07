@@ -10,6 +10,9 @@ config = { key: "e272201a0baf0596848291341bb761b7", host: "localhost", port: 500
 io = require('socket.io-client')
 url = "http://#{config.host}:#{config.port}"
 socket = io.connect(url)
+socket.on 'connect', ->
+  socket.emit "identify", config.key, (response) ->
+    console.log "identified..."
 
 rules = [
   "Grouping of ossec rules.",
@@ -2348,7 +2351,6 @@ buildEvent = (callback) ->
   user = _.sample(names)
   dns.lookup host, (err, ip) ->
     callback {
-      "account": config.key,
       "event": {    
         "timestamp": new Date(), 
         "name": _.sample(rules),

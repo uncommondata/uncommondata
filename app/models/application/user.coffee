@@ -13,7 +13,6 @@ Schema = new mongoose.Schema
   name: { type: String, default: '', required: true },
   hashed_password: { type: String, required: true },
   salt: { type: String },
-  apikey: { type: String, default: null }
   terms: {type: Boolean, default: false, required: true, validate: acceptTerms }
 
 Schema.plugin(uniqueValidator)

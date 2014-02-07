@@ -1,4 +1,5 @@
 Stream = require('stream').Stream
+eventPresenter = require('../app/presenters/event_presenter')
 
 class ArrayFormatter extends Stream
   constructor: () ->
@@ -25,37 +26,4 @@ class ArrayFormatter extends Stream
       @emit('data', ']')
       @emit('end')
 
-global.ArrayFormatter = ArrayFormatter
-
-# // // function ArrayFormatter () {
-# // //   Stream.call(this);
-# // //   this.writable = true;
-# // //   this._done = false;
-# // // }
- 
-# // // ArrayFormatter.prototype.__proto__ = Stream.prototype;
- 
-# // ArrayFormatter.prototype.write = function (doc) {
-# //   event = JSON.stringify(eventPresenter(doc));
-# //   if (! this._hasWritten) {
-# //     this._hasWritten = true;
-# //     // open an object literal / array string along with the doc
-# //     this.emit('data', '[' + event);
-# //   } else {
-# //     this.emit('data', ',' + event);
-# //   }
- 
-# //   return true;
-# // }
- 
-# // ArrayFormatter.prototype.end =
-# // ArrayFormatter.prototype.destroy = function () {
-# //   if (this._done) return;
-# //   this._done = true;
- 
-# //   // close the object literal / array
-# //   this.emit('data', ']');
-# //   // done
-# //   this.emit('end');
-# // }
-
+module.exports = ArrayFormatter

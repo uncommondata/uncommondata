@@ -1,5 +1,7 @@
 # TODO - Make the customer id lookup a LRU cache
 
+eventPresenter = require('../presenters/event_presenter')
+
 class BrowserNotifier
   constructor: (@redis, @pusher) ->
     # note, pusher is old
